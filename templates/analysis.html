@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% block title %}{{ analysis.page_title or 'Analysis' }}{% endblock %}
+{% block content %}
+<div class="page-wrap">
+  <a class="back-link" href="{{ url_for('index') }}">← New analysis</a>
+  <section class="result-heading">
+    <div>
+      <div class="eyebrow"><span class="eyebrow-line"></span> ANALYSIS REPORT</div>
+      <h1>{{ analysis.page_title or 'Your content analysis' }}</h1>
+      {% if analysis.source_url %}<a class="source-link" href="{{ analysis.source_url }}" target="_blank" rel="noopener noreferrer">{{ analysis.source_url }} <span>↗</span></a>{% elif analysis.extraction_method.startswith('upload_') %}<span class="source-link">Uploaded file · source file not stored</span>{% else %}<span class="source-link">Pasted text</span>{% endif %}
+    </div>
+    <div class="classification-badge"><span class="badge-dot"></span><span><small>CONTENT TYPE</small><strong>{{ analysis.content_type|replace('_', ' ')|title }}</strong></span><small class="confidence">{{ (analysis.confidence * 100)|round|int }}% confidence</small></div>
+  </section>
+  {% if analysis.is_review %}
+  <section class="metric-grid">
+    <article class="metric-card positive-card"><span class="metric-label">POSITIVE</span><strong>{{ analytics.positive_percent }}<small>%</small></strong><span class="metric-foot">of aspect mentions</span></article>
+    <article class="metric-card neutral-card"><span class="metric-label">NEUTRAL</span><strong>{{ analytics.neutral_percent }}<small>%</small></strong><span class="metric-foot">of aspect mentions</span></article>
+    <article class="metric-card negative-card"><span class="metric-label">NEGATIVE</span><strong>{{ analytics.negative_percent }}<small>%</small></strong><span class="metric-foot">of aspect mentions</span></article>
+    <article class="metric-card mentions-card"><span class="metric-label">ASPECT MENTIONS</span><strong>{{ analytics.total_mentions }}</strong><span class="metric-foot">across {{ aspects|length }} topics</span></article>
+  </section>
+  <section class="results-grid">
+    <article class="panel sentiment-panel">
+      <div class="panel-title"><div><span class="step-label">THE BIG PICTURE</span><h2>Sentiment mix</h2></div><span class="mini-caption">Aspect mentions</span></div>
+      <div class="sentiment-visual">
+        <div class="donut" style="--positive: {{ analytics.positive_percent }}%; --neutral: {{ analytics.neutral_percent }}%; --negative: {{ analytics.negative_percent }}%">
+          <div class="donut-hole"><strong>{{ analytics.total_mentions }}</strong><span>mentions</span></div>
+        </div>
+        <div class="legend">
+          <div><i class="legend-dot positive"></i><span>Positive</span><strong>{{ analytics.positive_percent }}%</strong></div>
+          <div><i class="legend-dot neutral"></i><span>Neutral</span><strong>{{ analytics.neutral_percent }}%</strong></div>
+          <div><i class="legend-dot negative"></i><span>Negative</span><strong>{{ analytics.negative_percent }}%</strong></div>
+        </div>
+      </div>
+    </article>
+    <article class="panel">
+      <div class="panel-title"><div><span class="step-label">WHAT STANDS OUT</span><h2>Top aspects</h2></div></div>
+      {% if analytics.top_aspects %}
+      <div class="aspect-bars">
+        {% for aspect in analytics.top_aspects %}
+        <div class="aspect-row"><div class="aspect-caption"><span>{{ aspect.aspect|title }}</span><small>{{ aspect.mention_count }} mention{{ 's' if aspect.mention_count != 1 else '' }}</small></div><div class="bar-track"><span class="bar-fill {{ aspect.sentiment }}" style="width: {{ [aspect.mention_count / analytics.top_aspects[0].mention_count * 100, 100]|min }}%"></span></div></div>
+        {% endfor %}
+      </div>
+      {% else %}<p class="empty-note">No clearly linked aspect-level sentiment was found in this content. The summary is still available below.</p>{% endif %}
+    </article>
+  </section>
+  <section class="results-grid insight-grid">
+    <article class="panel insight-panel strength-panel"><span class="insight-symbol">↗</span><span class="step-label">WHAT PEOPLE VALUE</span><h2>Top strengths</h2>{% if analysis.strengths %}<div class="chip-list">{% for item in analysis.strengths %}<span class="chip positive-chip">{{ item|title }}</span>{% endfor %}</div>{% else %}<p class="empty-note">No clear positive aspects detected.</p>{% endif %}</article>
+    <article class="panel insight-panel weakness-panel"><span class="insight-symbol">↘</span><span class="step-label">ROOM TO IMPROVE</span><h2>Top weaknesses</h2>{% if analysis.weaknesses %}<div class="chip-list">{% for item in analysis.weaknesses %}<span class="chip negative-chip">{{ item|title }}</span>{% endfor %}</div>{% else %}<p class="empty-note">No clear negative aspects detected.</p>{% endif %}</article>
+  </section>
+  {% else %}
+  <section class="content-topics panel"><div><span class="step-label">KEY THEMES</span><h2>Topics in this content</h2></div><div class="chip-list">{% for topic in analysis.topics %}<span class="chip topic-chip">{{ topic|title }}</span>{% else %}<span class="empty-note">No recurring topics detected.</span>{% endfor %}</div></section>
+  {% endif %}
+  <section class="panel summary-panel">
+    <div class="panel-title"><div><span class="step-label">THE TAKEAWAY</span><h2>Executive summary</h2></div><span class="summary-icon">✳</span></div>
+    <p class="summary-copy">{{ analysis.summary }}</p>
+    <div class="summary-divider"></div>
+    <div class="summary-details">
+      <div><span class="step-label">{{ 'RECOMMENDATION' if analysis.is_review else 'NEXT STEP' }}</span><p>{{ analysis.recommendation }}</p></div>
+      <div><span class="step-label">{{ 'BUSINESS INSIGHT' if analysis.is_review else 'CONTENT INSIGHT' }}</span><p>{{ analysis.business_insight }}</p></div>
+    </div>
+  </section>
+  {% if aspects %}
+  <section class="panel evidence-panel">
+    <div class="panel-title"><div><span class="step-label">BACKED BY THE TEXT</span><h2>Aspect details</h2></div></div>
+    <div class="table-scroll"><table><thead><tr><th>ASPECT</th><th>SENTIMENT</th><th>MENTIONS</th><th>EXAMPLE</th></tr></thead><tbody>
+      {% for aspect in aspects %}<tr><td><strong>{{ aspect.aspect|title }}</strong></td><td><span class="sentiment-pill {{ aspect.sentiment }}">{{ aspect.sentiment|title }}</span></td><td>{{ aspect.mention_count }}</td><td class="evidence-text">{{ aspect.evidence|join(' · ') }}</td></tr>{% endfor %}
+    </tbody></table></div>
+  </section>
+  {% endif %}
+  <div class="report-footer"><span>Analyzed {{ analysis.created_at.strftime('%B %d, %Y at %H:%M') }} UTC · {% if analysis.extraction_method.startswith('upload_') %}Uploaded {{ analysis.extraction_method[7:]|upper }} file{% elif analysis.extraction_method == 'browser_extension' %}Chrome extension capture{% else %}{{ analysis.extraction_method|title }} extraction{% endif %}</span><span>Automated analysis can miss nuance. Verify important decisions with the source.</span></div>
+  <form class="delete-analysis-form" action="{{ url_for('delete_analysis', analysis_id=analysis.id) }}" method="post" onsubmit="return confirm('Permanently delete this analysis?');"><input type="hidden" name="_csrf_token" value="{{ csrf_token }}"><button class="button button-danger" type="submit">Delete this analysis</button></form>
+</div>
+{% endblock %}

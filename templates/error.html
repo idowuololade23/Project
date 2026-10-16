@@ -1,0 +1,5 @@
+{% extends "base.html" %}
+{% block title %}{{ code }} · Something went wrong{% endblock %}
+{% block content %}
+<section class="empty-state panel error-state"><span class="empty-art">{{ code }}</span><h1>That didn’t go as planned.</h1><p>{{ message }}</p><a class="button button-primary" href="{{ url_for('index') }}">Back to InsightLens <span>→</span></a></section>
+{% endblock %}

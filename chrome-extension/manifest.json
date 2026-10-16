@@ -1,0 +1,18 @@
+{
+  "manifest_version": 3,
+  "name": "InsightLens Page Capture",
+  "version": "1.0.0",
+  "description": "Send the visible text from your current page to your local InsightLens app.",
+  "permissions": [
+    "activeTab",
+    "scripting"
+  ],
+  "host_permissions": [
+    "http://127.0.0.1:5000/*",
+    "http://localhost:5000/*"
+  ],
+  "action": {
+    "default_title": "Analyze this page with InsightLens",
+    "default_popup": "popup.html"
+  }
+}

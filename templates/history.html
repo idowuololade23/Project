@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}Analysis history{% endblock %}
+{% block content %}
+<div class="page-wrap history-wrap">
+  <div class="section-heading history-heading"><div><span class="eyebrow"><span class="eyebrow-line"></span> YOUR PRIVATE WORKSPACE</span><h1>Analysis history</h1><p class="hero-copy">Revisit saved analyses in this browser. Clear them whenever you like.</p></div><div class="history-actions"><a class="button button-primary" href="{{ url_for('index') }}">+ New analysis</a>{% if analyses %}<form action="{{ url_for('delete_all_analyses') }}" method="post" onsubmit="return confirm('Permanently delete all analyses saved in this browser workspace?');"><input type="hidden" name="_csrf_token" value="{{ csrf_token }}"><button class="button button-danger" type="submit">Delete all</button></form>{% endif %}</div></div>
+  {% if analyses %}
+  <div class="history-table-wrap panel"><table class="history-table"><thead><tr><th>PAGE</th><th>CONTENT TYPE</th><th>DATE</th><th></th></tr></thead><tbody>
+    {% for item in analyses %}<tr><td><a class="history-title" href="{{ url_for('analysis_detail', analysis_id=item.id) }}"><span class="type-icon {{ 'review' if item.is_review else 'content' }}">{{ '↗' if item.is_review else '≋' }}</span><span><strong>{{ item.page_title or item.source_url or 'Pasted text' }}</strong><small>{{ item.source_url or 'Pasted text analysis' }}</small></span></a></td><td><span class="type-label">{{ item.content_type|replace('_', ' ')|title }}</span></td><td class="date-cell">{{ item.created_at.strftime('%b %d, %Y') }}</td><td><a class="recent-arrow" href="{{ url_for('analysis_detail', analysis_id=item.id) }}" aria-label="Open analysis">→</a></td></tr>{% endfor %}
+  </tbody></table></div>
+  {% else %}<div class="empty-state panel"><span class="empty-art">≋</span><h2>Your next insight starts here.</h2><p>Analyzed pages will appear here so you can return to them later.</p><a class="button button-primary" href="{{ url_for('index') }}">Analyze a page <span>→</span></a></div>{% endif %}
+</div>
+{% endblock %}

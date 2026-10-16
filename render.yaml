@@ -1,0 +1,41 @@
+services:
+  - type: web
+    name: insightlens
+    runtime: python
+    plan: free
+    region: oregon
+    buildCommand: pip install -r requirements.txt
+    startCommand: flask --app app db upgrade && waitress-serve --listen=0.0.0.0:${PORT:-10000} wsgi:app
+    healthCheckPath: /health
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DATABASE_URL
+        fromDatabase:
+          name: insightlens-db
+          property: connectionString
+      - key: RATELIMIT_STORAGE_URI
+        fromService:
+          type: keyvalue
+          name: insightlens-limits
+          property: connectionString
+      - key: COOKIE_SECURE
+        value: "true"
+      - key: TRUSTED_PROXY_COUNT
+        value: "1"
+      - key: DYNAMIC_EXTRACTION_ENABLED
+        value: "false"
+
+  - type: keyvalue
+    name: insightlens-limits
+    plan: free
+    region: oregon
+    ipAllowList: []
+
+databases:
+  - name: insightlens-db
+    databaseName: insightlens
+    plan: free
+    region: oregon

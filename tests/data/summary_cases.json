@@ -1,0 +1,18 @@
+[
+  {
+    "text":"Customers repeatedly praise the unusually long battery life and sturdy build. Several owners say the camera takes crisp photos in daylight. Reviewers appreciate the lightweight design for everyday use. The recurring drawback is the high price, especially compared with similar models.",
+    "must_mention":["battery","price"]
+  },
+  {
+    "text":"Coastal wetlands protect towns from storm flooding by absorbing waves and rainwater. Scientists mapped marsh sites along the coast during two years of fieldwork. The survey found marshes reduced nearby flood impacts and provided habitat for migrating birds. Restoring degraded wetlands could strengthen flood resilience while supporting local wildlife.",
+    "must_mention":["flood","wildlife"]
+  },
+  {
+    "text":"The hotel sits near the old town and the rooms have comfortable beds. Guests repeatedly praised the helpful staff and spotless rooms. The breakfast was fresh, with several vegetarian choices. A number of visitors noted that the restaurant service became slow on busy evenings.",
+    "must_mention":["staff","rooms","service"]
+  },
+  {
+    "text":"The study examined how adult learners use mobile language lessons. Participants completed short daily exercises for twelve weeks. Researchers compared vocabulary test scores before and after the course. Learners who practiced regularly improved their scores more than the comparison group.",
+    "must_mention":["learners","scores"]
+  }
+]

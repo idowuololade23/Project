@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+{% block title %}Analyze a page{% endblock %}
+{% block content %}
+<section class="intro-shell">
+  <div class="hero">
+    <div class="hero-copy-block">
+      <div class="eyebrow"><span class="eyebrow-line"></span> A NEW LENS ON WHAT PEOPLE SAY</div>
+      <h1>Listen closer.<br>See <em>what matters.</em></h1>
+      <p class="hero-copy">From the five-star review to the fine print. Turn any webpage into a clearer picture of what people really think.</p>
+      <div class="hero-tags"><span>✳ &nbsp;Product reviews</span><span>Articles &amp; research</span><span>Customer feedback</span></div>
+    </div>
+    <div class="hero-art" aria-label="Illustration of an insight report">
+      <div class="orbit orbit-one"></div><div class="orbit orbit-two"></div>
+      <div class="orbit-star star-one">✳</div><div class="orbit-star star-two">✳</div>
+      <div class="preview-card">
+        <div class="preview-top"><span class="preview-kicker">THE CUSTOMER PICTURE</span><span class="preview-spark">✳</span></div>
+        <div class="preview-title">A little more clarity.</div>
+        <div class="preview-subtitle">Sample review insight</div>
+        <div class="preview-meter">
+          <div class="meter-score"><strong>72</strong><span>% positive</span></div>
+          <div class="meter-ring"><span>↗</span></div>
+        </div>
+        <div class="preview-rule"></div>
+        <div class="preview-aspect-heading"><span>WHAT PEOPLE MENTION</span><span>01—03</span></div>
+        <div class="preview-aspect"><span class="aspect-bullet mint"></span><span>Battery life</span><strong>Love it</strong></div>
+        <div class="preview-aspect"><span class="aspect-bullet coral"></span><span>Price point</span><strong>Could improve</strong></div>
+        <div class="preview-aspect"><span class="aspect-bullet gold"></span><span>Design</span><strong>Standout</strong></div>
+        <div class="preview-foot"><span class="preview-pulse"></span> Every detail tells a story</div>
+      </div>
+      <div class="float-note"><span class="float-note-icon">✦</span><span><strong>Beyond a score</strong><small>Understand the why.</small></span></div>
+    </div>
+    <div class="hero-index"><span>01</span> — MAKE SENSE OF THE NOISE</div>
+  </div>
+
+  <section class="workspace">
+    <div class="input-card">
+      <div class="card-heading">
+        <div><span class="step-label">YOUR NEXT INSIGHT STARTS HERE</span><h2>What are we looking into?</h2><p class="card-intro">Drop in a link or share the words themselves. We’ll take it from here.</p></div>
+        <span class="spark-icon" aria-hidden="true">✳</span>
+      </div>
+      <form action="{{ url_for('analyze') }}" method="post" enctype="multipart/form-data" id="analysis-form">
+        <input type="hidden" name="_csrf_token" value="{{ csrf_token }}">
+        <input type="hidden" name="captured_url" id="captured-url">
+        <input type="hidden" name="captured_title" id="captured-title">
+        <label for="url"><span class="field-icon">↗</span> A webpage link <span class="optional">PASTE A URL</span></label>
+        <div class="url-field"><input id="url" name="url" type="url" placeholder="https://somewhere-interesting.com/reviews" autocomplete="url"></div>
+        <div class="separator"><span>OR BRING YOUR OWN TEXT</span></div>
+        <label for="text"><span class="field-icon">⌘</span> A piece of text <span class="optional">UP TO 100,000 CHARACTERS</span></label>
+        <textarea id="text" name="text" rows="5" maxlength="100000" placeholder="A review, a conversation, a story, or a study…"></textarea>
+        <div class="separator"><span>OR UPLOAD A REVIEW FILE</span></div>
+        <label for="file"><span class="field-icon">↑</span> CSV, plain text, or Word document <span class="optional">TXT · CSV · DOCX · MAX 1 MB</span></label>
+        <input class="upload-input" id="file" name="file" type="file" accept=".txt,.csv,.docx,text/plain,text/csv,application/vnd.openxmlformats-officedocument.wordprocessingml.document">
+        <p class="upload-note" id="upload-note">Files are read for analysis and are not stored. CSV files use a review/text/content/comment column when available.</p>
+        <div class="form-foot"><span class="privacy-note"><span aria-hidden="true">◈</span> Private to this browser · Keep its session cookie to revisit saved work</span><button class="button button-primary" type="submit">Reveal the insight <span aria-hidden="true">↗</span></button></div>
+      </form>
+      <section class="extension-note" aria-labelledby="extension-heading">
+        <span class="extension-icon" aria-hidden="true">↗</span>
+        <div><strong id="extension-heading">Have the page open in Chrome?</strong><p>For a local demo, load the <code>chrome-extension</code> folder using Chrome’s <em>Load unpacked</em> option. The extension captures visible text only when clicked and sends it to this app. Setup steps are in <code>chrome-extension/README.md</code>.</p></div>
+      </section>
+    </div>
+    <aside class="how-card">
+      <div class="how-heading"><span class="step-label">THOUGHTFULLY, FROM START TO FINISH</span><span class="how-mark">✳</span></div>
+      <h2>From words<br>to <em>wisdom.</em></h2>
+      <div class="how-step"><span class="step-number">01</span><div><strong>First, we listen.</strong><p>Readable text, carefully gathered from a page or your own notes.</p></div></div>
+      <div class="how-step"><span class="step-number">02</span><div><strong>Then, we find the thread.</strong><p>Reviews and editorial content each get the analysis they deserve.</p></div></div>
+      <div class="how-step"><span class="step-number">03</span><div><strong>Finally, the picture clears.</strong><p>See the sentiment, themes, and details behind the words.</p></div></div>
+      <div class="how-bottom"><span>BUILT FOR THE WHOLE STORY</span><div><i>01</i> Products <i>02</i> Places <i>03</i> Ideas</div></div>
+    </aside>
+  </section>
+</section>
+{% if recent %}
+<section class="recent-section">
+  <div class="section-heading"><div><span class="step-label">A TRAIL OF THOUGHT</span><h2>Recently explored</h2></div><a class="text-link" href="{{ url_for('history') }}">All your analyses <span>↗</span></a></div>
+  <div class="recent-list">
+    {% for item in recent %}
+    <a class="recent-item" href="{{ url_for('analysis_detail', analysis_id=item.id) }}">
+      <span class="type-icon {{ 'review' if item.is_review else 'content' }}">{{ '↗' if item.is_review else '≋' }}</span>
+      <span class="recent-title"><strong>{{ item.page_title or item.source_url or 'Pasted text' }}</strong><small>{{ item.content_type|replace('_', ' ')|title }} · {{ item.created_at.strftime('%b %d, %Y') }}</small></span>
+      <span class="recent-arrow">↗</span>
+    </a>
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
+<script>
+  const urlInput = document.getElementById("url");
+  const textInput = document.getElementById("text");
+  const fileInput = document.getElementById("file");
+  const clearFileWhenTextEntered = () => {
+    if (textInput.value.trim()) fileInput.value = "";
+  };
+  textInput.addEventListener("input", clearFileWhenTextEntered);
+  urlInput.addEventListener("input", () => {
+    if (urlInput.value.trim()) fileInput.value = "";
+  });
+  document.getElementById("analysis-form").addEventListener("submit", event => {
+    const inputCount = [urlInput.value.trim(), textInput.value.trim(), fileInput.files.length].filter(Boolean).length;
+    if (inputCount !== 1) {
+      event.preventDefault();
+      alert("Choose one input: a webpage URL, pasted text, or a review file.");
+    }
+  });
+  fileInput.addEventListener("change", () => {
+    if (fileInput.files.length) {
+      urlInput.value = "";
+      textInput.value = "";
+      document.getElementById("upload-note").textContent = `${fileInput.files[0].name} is ready to analyze.`;
+    } else {
+      document.getElementById("upload-note").textContent = "Files are read for analysis and are not stored. CSV files use a review/text/content/comment column when available.";
+    }
+  });
+</script>
+{% endblock %}

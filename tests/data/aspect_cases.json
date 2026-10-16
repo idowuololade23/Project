@@ -1,0 +1,18 @@
+[
+  {"text":"The battery is excellent.","aspect":"battery","sentiment":"positive"},
+  {"text":"The battery is not good.","aspect":"battery","sentiment":"negative"},
+  {"text":"The price is too high.","aspect":"price","sentiment":"negative"},
+  {"text":"The camera is excellent.","aspect":"camera","sentiment":"positive"},
+  {"text":"The design is beautiful.","aspect":"design","sentiment":"positive"},
+  {"text":"The food was cold.","aspect":"food","sentiment":"negative"},
+  {"text":"The staff were very friendly.","aspect":"staff","sentiment":"positive"},
+  {"text":"Delivery arrived late.","aspect":"delivery","sentiment":"negative"},
+  {"text":"The screen is poor.","aspect":"display","sentiment":"negative"},
+  {"text":"The interface is easy to use.","aspect":"usability","sentiment":"positive"},
+  {"text":"The bed is comfortable.","aspect":"comfort","sentiment":"positive"},
+  {"text":"Customer service was not helpful.","aspect":"customer service","sentiment":"negative"},
+  {"text":"Battery life is excellent but the price is expensive.","aspect":"battery","sentiment":"positive"},
+  {"text":"Battery life is excellent but the price is expensive.","aspect":"price","sentiment":"negative"},
+  {"text":"The customer service was helpful, but the delivery was late.","aspect":"customer service","sentiment":"positive"},
+  {"text":"The customer service was helpful, but the delivery was late.","aspect":"delivery","sentiment":"negative"}
+]

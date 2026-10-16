@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f4f2ec">
+  <title>{% block title %}InsightLens{% endblock %} · InsightLens</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css', v=3) }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/redesign.css', v=2) }}">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="{{ url_for('index') }}" aria-label="InsightLens home">
+      <span class="brand-mark">i</span><span>insight<span class="brand-light">lens</span></span>
+    </a>
+    <nav class="main-nav" aria-label="Main navigation">
+      <a href="{{ url_for('index') }}" class="{{ 'active' if request.endpoint == 'index' else '' }}">Analyze</a>
+      <a href="{{ url_for('history') }}" class="{{ 'active' if request.endpoint == 'history' else '' }}">History</a>
+    </nav>
+    <span class="nav-note"><span class="status-dot"></span> Your insights, in focus</span>
+  </header>
+  <main>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div class="flash-stack" role="status">
+          {% for category, message in messages %}
+            <div class="flash {{ category }}">{{ message }}</div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+    {% block content %}{% endblock %}
+  </main>
+  <footer class="site-footer"><span>InsightLens</span><span>Thoughtful analysis for the things people say.</span></footer>
+</body>
+</html>

@@ -1,0 +1,13 @@
+* { box-sizing: border-box; }
+body { width: 320px; margin: 0; color: #233a36; background: #f8f7f1; font-family: "Segoe UI", sans-serif; }
+main { padding: 20px; }
+.brand { display: flex; align-items: center; gap: 9px; color: #193c36; font-size: 15px; font-weight: 700; letter-spacing: -.6px; }
+.brand strong { color: #90978d; font-weight: 400; }
+.brand-mark { display: grid; width: 26px; height: 26px; place-items: center; border-radius: 50% 50% 50% 12px; color: #fffefa; background: #234b42; font: italic 700 14px Georgia, serif; }
+h1 { margin: 23px 0 8px; font: 400 23px/1.15 Georgia, serif; letter-spacing: -.5px; }
+p { color: #77847b; font-size: 12px; line-height: 1.6; }
+button { display: flex; width: 100%; align-items: center; justify-content: space-between; margin-top: 18px; padding: 12px 14px; border: 0; border-radius: 4px; color: #fffaf1; background: #d96d4b; font: 600 12px "Segoe UI", sans-serif; cursor: pointer; }
+button:hover { background: #bd593a; }
+button:disabled { opacity: .65; cursor: wait; }
+#status { min-height: 34px; margin-bottom: 0; font-size: 10px; }
+#status.error { color: #a34836; }
