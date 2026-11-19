@@ -114,13 +114,13 @@ For local use of the production WSGI server, `waitress-serve --listen=127.0.0.1:
 
 ### Deploy a free demo on Render
 
-The root-level `render.yaml` defines a free Render web service, PostgreSQL database, and private Key Value store. To deploy it:
+The root-level `render.yaml` defines a free Render web service, PostgreSQL database, and private Key Value store. Its current resource names use the `insightlens-demo2` prefix so they can be deployed as a separate Blueprint from an older InsightLens deployment. To create it:
 
 1. Put this project in a GitHub repository. Do not upload `.env`, `.venv`, or local database files.
-2. In the [Render Dashboard](https://dashboard.render.com), choose **New > Blueprint**, connect the repository, and select **Deploy Blueprint**.
-3. Wait for the first deploy to finish, then open the `onrender.com` URL shown for the `insightlens` web service. The service applies database migrations during startup.
+2. In the [Render Dashboard](https://dashboard.render.com), choose **New > Blueprint**, connect the repository, and select **Deploy Blueprint** to create the new resources.
+3. Wait for the first deploy to finish, then open the `onrender.com` URL shown for the `insightlens-demo2` web service. The service applies database migrations during startup.
 
-This is for demos, not durable production use. Render's free web service sleeps after 15 minutes without traffic, and its filesystem is temporary. The Blueprint uses Render's free PostgreSQL, which expires 30 days after creation; after its 14-day upgrade grace period Render deletes it and its data. The free Key Value store is in-memory and can lose its rate-limit counters when it restarts. Upgrade the database before it expires if you need to keep data. Dynamic browser rendering is disabled on this free setup; static webpage extraction and pasted-text analysis remain available.
+This creates a fresh database and does not restore data from any previous Render deployment. This is for demos, not durable production use. Render's free web service sleeps after 15 minutes without traffic, and its filesystem is temporary. The Blueprint uses Render's free PostgreSQL, which expires 30 days after creation; after its 14-day upgrade grace period Render deletes it and its data. The free Key Value store is in-memory and can lose its rate-limit counters when it restarts. Upgrade the database before it expires if you need to keep data. Dynamic browser rendering is disabled on this free setup; static webpage extraction and pasted-text analysis remain available.
 
 ## Project layout
 
